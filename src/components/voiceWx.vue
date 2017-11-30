@@ -19,7 +19,11 @@ export default {
         serverId: "" // 返回音频的服务器端ID
       },
       resData: {},
-      appId: "wxbf6bc8d2ddf651ad"
+      appId: "wxbf6bc8d2ddf651ad",
+      title: "微信吹气",
+      desc: "这是分享",
+      link: PUBLICSRC,
+      imgUrl: ""
     };
   },
   mounted() {
@@ -56,7 +60,6 @@ export default {
       };
       wx.config(configObj);
       wx.ready(function() {
-        alert(JSON.stringify(wx));
         that.$el.children[0].onclick = function() {
           that.statVoice();
         };
@@ -66,6 +69,30 @@ export default {
         that.$el.children[2].onclick = function() {
           that.upLoad();
         };
+
+        wx.onMenuShareAppMessage({
+          title: that.title, // 分享标题
+          desc: that.desc, // 分享描述
+          link: that.PUBLICSRC, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: that.imgUrl, // 分享图标
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareTimeline({
+          title: that.title, // 分享标
+          link: that.PUBLICSRC, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: that.imgUrl,
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
       });
       wx.error(function(res) {
         alert(res.errMsg);
@@ -90,7 +117,6 @@ export default {
     stopVoice() {
       this.btnText = "等待结果";
       this.isWorking = false;
-      alert(JSON.stringify(wx));
       wx.stopRecord({
         success: function(res) {
           this.voice.localId = res.localId;
@@ -103,7 +129,6 @@ export default {
     },
     upLoad() {
       //上传语音
-      alert(JSON.stringify(wx));
       wx.uploadVoice({
         localId: this.voice.localId,
         success: function(res) {
