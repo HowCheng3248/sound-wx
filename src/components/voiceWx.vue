@@ -56,7 +56,7 @@ export default {
         timestamp: this.resData.timestamp, // 必填，生成签名的时间戳
         nonceStr: this.resData.noncestr, // 必填，生成签名的随机串
         signature: this.resData.signature, // 必填，签名
-        jsApiList: ["startRecord", "stopRecord", "uploadVoice"]
+        jsApiList: ["startRecord", "stopRecord", "uploadVoice","onMenuShareAppMessage","onMenuShareTimeline"]
       };
       wx.config(configObj);
       wx.ready(function() {
