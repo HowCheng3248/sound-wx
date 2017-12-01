@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import wx from "weixin-js-sdk";
+// import wx from "weixin-js-sdk";
 
 export default {
   data() {
@@ -20,9 +20,9 @@ export default {
       },
       resData: {},
       appId: "wxbf6bc8d2ddf651ad",
-      title: "微信吹气",
+      title: "吹气分享",
       desc: "这是分享",
-      link: PUBLICSRC,
+      link: window.location.href,
       imgUrl: ""
     };
   },
@@ -32,9 +32,8 @@ export default {
   methods: {
     getWxAjax() {
       const that = this;
-      let host = PUBLICSRC;
       let option = {
-        url: `/getBaseInfo?url=${PUBLICSRC}`,
+        url: `/getBaseInfo?url=${that.link}`,
         method: "get",
         data: {}
       };
@@ -42,6 +41,8 @@ export default {
         .axios(option)
         .then(res => {
           this.resData = res.data;
+          this.resData.timestamp = parseInt(this.resData.timestamp);
+          this.resData.signature = this.resData.signature.toLowerCase();
           this.wxReady();
         })
         .catch(error => {
@@ -51,12 +52,18 @@ export default {
     wxReady() {
       const that = this;
       let configObj = {
-        debug: false,
+        debug: true,
         appId: this.appId, // 必填，公众号的唯一标识
         timestamp: this.resData.timestamp, // 必填，生成签名的时间戳
         nonceStr: this.resData.noncestr, // 必填，生成签名的随机串
         signature: this.resData.signature, // 必填，签名
-        jsApiList: ["startRecord", "stopRecord", "uploadVoice","onMenuShareAppMessage","onMenuShareTimeline"]
+        jsApiList: [
+          "startRecord",
+          "stopRecord",
+          "uploadVoice",
+          "onMenuShareAppMessage",
+          "onMenuShareTimeline"
+        ]
       };
       wx.config(configObj);
       wx.ready(function() {
@@ -71,20 +78,9 @@ export default {
         };
 
         wx.onMenuShareAppMessage({
-          title: that.title, // 分享标题
-          desc: that.desc, // 分享描述
-          link: that.PUBLICSRC, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: that.imgUrl, // 分享图标
-          success: function() {
-            // 用户确认分享后执行的回调函数
-          },
-          cancel: function() {
-            // 用户取消分享后执行的回调函数
-          }
-        });
-        wx.onMenuShareTimeline({
-          title: that.title, // 分享标
-          link: that.PUBLICSRC, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          title: that.title,
+          desc: that.desc,
+          link: that.link,
           imgUrl: that.imgUrl,
           success: function() {
             // 用户确认分享后执行的回调函数
@@ -93,6 +89,18 @@ export default {
             // 用户取消分享后执行的回调函数
           }
         });
+        wx.onMenuShareTimeline({
+          title: that.title,
+          link: that.link,
+          imgUrl: that.imgUrl,
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        // alert(JSON.stringify(configObj));
       });
       wx.error(function(res) {
         alert(res.errMsg);
