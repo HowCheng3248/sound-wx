@@ -22,7 +22,7 @@ export default {
       appId: "wxbf6bc8d2ddf651ad",
       title: "吹气分享",
       desc: "这是分享",
-      link: window.location.href,
+      link: "",
       imgUrl: ""
     };
   },
@@ -32,6 +32,7 @@ export default {
   methods: {
     getWxAjax() {
       const that = this;
+      that.link = window.location.href;
       let option = {
         url: `/getBaseInfo?url=${that.link}`,
         method: "get",
@@ -66,6 +67,7 @@ export default {
         ]
       };
       wx.config(configObj);
+
       wx.ready(function() {
         that.$el.children[0].onclick = function() {
           that.statVoice();
@@ -76,7 +78,6 @@ export default {
         that.$el.children[2].onclick = function() {
           that.upLoad();
         };
-
         wx.onMenuShareAppMessage({
           title: that.title,
           desc: that.desc,
