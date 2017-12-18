@@ -37,7 +37,7 @@ export default {
   methods: {
     choiceBox(color, e) {
       if (e.target.classList.length === 2) {
-        //已经算中再次点击
+        //已经选中再次点击
         e.target.classList.remove("selected");
         for (let i = 0; i < this.select.length; i++) {
           if (this.select[i] === color) {
